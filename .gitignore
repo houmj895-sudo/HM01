@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+
+# Virtual environment
+venv/
+.venv/
+env/
+ENV/
+venv_backup.tar.gz
+
+# ROS 2 build artifacts
+build/
+install/
+log/
+
+# Mujoco temporary files
+*.mjb
+*.xml~
+*.log
+*.bak
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Checkpoints, models, datasets
+*.pth
+*.onnx
+*.zip
+*.tar
+*.tar.gz
+*.h5
+
+# Reports and cache
+reports/*.tmp
+reports/__pycache__/
