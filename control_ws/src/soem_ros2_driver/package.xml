@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd"
+             schematypens="http://www.w3.org/2001/XMLSchema"?>
+
+<!-- ============================================================
+     ROS 2 package.xml (格式版本3)
+     用于描述包的元信息、依赖关系与构建方式
+     ============================================================ -->
+<package format="3">
+
+  <!-- ==============================
+       基本信息
+       ============================== -->
+  <name>soem_ros2_driver</name>  <!-- 包名：必须与文件夹名一致 -->
+  <version>0.1.0</version>        <!-- 包版本号：建议从 0.1.0 起 -->
+  <description>
+    EtherCAT SOEM driver integration for ROS 2.
+    Provides master node interfaces for scanning and managing EtherCAT slaves.
+  </description>
+
+  <!-- ==============================
+       作者与维护者信息
+       ============================== -->
+  <maintainer email="houmj895@gmail.com">HMJ</maintainer>  <!-- 维护者（必需） -->
+  <author email="houmj895@gmail.com">HMJ</author>          <!-- 作者（可选） -->
+
+  <!-- ==============================
+       许可证声明
+       ============================== -->
+  <license>Apache-2.0</license>   <!-- 推荐使用开源许可证，如 Apache-2.0 / MIT / BSD-3-Clause -->
+
+  <!-- ==============================
+       构建工具依赖
+       ============================== -->
+  <buildtool_depend>ament_cmake</buildtool_depend>  <!-- 使用 ament_cmake 进行构建 -->
+
+  <!-- ==============================
+       构建与运行依赖
+       depend 等价于 build_depend + exec_depend
+       ============================== -->
+  <depend>rclcpp</depend>      <!-- ROS 2 C++ 客户端库 -->
+  <depend>std_msgs</depend>    <!-- 标准消息类型库 -->
+  <depend>soem</depend>        <!-- 外部 SOEM 库依赖（如在系统中已安装） -->
+
+  <!-- ==============================
+       测试依赖（可选）
+       ============================== -->
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>  <!-- 若计划使用 gtest 编写单元测试 -->
+
+  <!-- ==============================
+       导出信息
+       通常用于声明构建类型或插件信息
+       ============================== -->
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+
+</package>
