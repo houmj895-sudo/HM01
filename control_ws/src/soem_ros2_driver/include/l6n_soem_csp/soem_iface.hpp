@@ -25,6 +25,9 @@ public:
     explicit SoemIface(const Logger &logger);
 
     bool init(const std::string &ifname);             // 初始化主站接口
+    
+    bool mapL6NPDOs();  // 手动配置雷赛 L6N 的 PDO 映射
+
     bool configureMapAndDC();                         // PDO + DC 配置
     bool requestState(uint16_t state, int timeout_us = EC_TIMEOUTSTATE); // 状态切换
     void writeState(uint16_t slave, uint16_t state);  // 写入状态字

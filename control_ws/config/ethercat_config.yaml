@@ -15,8 +15,8 @@ ethercat:
   # ----------------------------------------
   # ⚙️ 同步与时钟控制
   # ----------------------------------------
-  dc_enable: true            # 是否启用分布式时钟 (DC)
-  sync_mode: "DC"            # 同步模式：DC / FreeRun
+  dc_enable: false            # 是否启用分布式时钟 (DC)
+  sync_mode: "FreeRun"            # 同步模式：DC / FreeRun
   cycle_time_ns: 1000000     # EtherCAT 周期时间 (1 kHz = 1,000,000 ns)
   dc_shift_ns: 0             # 主站时钟偏移调整（高级用途，可保持 0）
   dc_sync_shift_ns: 0        # 分布式同步偏移（默认 0）
