@@ -23,10 +23,6 @@ log/
 *.log
 *.bak
 
-# VSCode
-.vscode/
-*.code-workspace
-
 # Checkpoints, models, datasets
 *.pth
 *.onnx

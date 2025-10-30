@@ -1,0 +1,44 @@
+{
+    "configurations": [
+        {
+            "name": "ROS2 Jazzy + venv (HM01)",
+            // ============================================
+            // 🔍 头文件搜索路径
+            // ============================================
+            "includePath": [
+                // 项目源代码路径
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/src/soem_ros2_driver/include/**",
+                // ROS2 Jazzy 所有头文件（含 rclcpp、std_msgs、sensor_msgs 等）
+                "/opt/ros/jazzy/include/**",
+                // 系统头文件
+                "/usr/include",
+                // Python 虚拟环境头文件（若使用 pybind11 或混合语言）
+                "${workspaceFolder}/venv/include",
+                "${workspaceFolder}/venv/lib/python3.12/site-packages",
+                // ROS2 库目录（少量依赖会引用此路径）
+                "/opt/ros/jazzy/lib/**"
+            ],
+            // ============================================
+            // ⚙️ 宏定义（可选）
+            // ============================================
+            "defines": [
+                "EIGEN_MPL2_ONLY",
+                "ROS2_BUILD"
+            ],
+            // ============================================
+            // 🧠 编译器与标准配置
+            // ============================================
+            "compilerPath": "/usr/bin/g++",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            // IntelliSense 模式
+            "intelliSenseMode": "linux-gcc-x64",
+            // 限制符号搜索范围，提高性能
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}
