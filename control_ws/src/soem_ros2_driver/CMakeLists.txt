@@ -1,62 +1,121 @@
 cmake_minimum_required(VERSION 3.16)
 project(soem_ros2_driver)
 
-# ============================================================
-# 📦 依赖声明
-# ============================================================
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
+# =========================================================
+# 🧱 一、依赖声明
+# =========================================================
+find_package(ament_cmake REQUIRED)   # ROS2 构建系统
+find_package(rclcpp REQUIRED)        # ROS2 C++ API
+find_package(std_msgs REQUIRED)      # 常用消息类型
 
-# ============================================================
-# 🔍 查找 SOEM 头文件与静态库
-# ============================================================
-# 注意：如果你通过 apt 或源码安装了 SOEM，请确保路径正确
+# =========================================================
+# 🧰 二、查找 SOEM 库与头文件
+# =========================================================
 find_path(SOEM_INCLUDE_DIRS soem/soem.h
-  PATHS /usr/local/include /usr/include
+  PATHS
+    ${CMAKE_SOURCE_DIR}/../SOEM/include
+    /usr/local/include
+    /usr/include
 )
 
 find_library(SOEM_LIB soem
-  PATHS /usr/local/lib /usr/lib
+  PATHS
+    ${CMAKE_SOURCE_DIR}/../SOEM/build
+    ${CMAKE_SOURCE_DIR}/../SOEM
+    /usr/local/lib
+    /usr/lib
   NAMES soem libsoem.a
 )
 
 if(NOT SOEM_INCLUDE_DIRS OR NOT SOEM_LIB)
-  message(FATAL_ERROR
-    "❌ SOEM library not found. Please install it under /usr/local or /usr.")
+  message(FATAL_ERROR "❌ 未找到 SOEM，请检查路径是否正确。")
 endif()
 
-# ============================================================
-# ⚙️ 构建节点：CSP 控制节点
-# ============================================================
-add_executable(csp_control_node src/csp_control_node.cpp)
+message(STATUS "✅ 找到 SOEM include: ${SOEM_INCLUDE_DIRS}")
+message(STATUS "✅ 找到 SOEM library: ${SOEM_LIB}")
 
-# 包含 SOEM 头文件路径
-target_include_directories(csp_control_node PRIVATE ${SOEM_INCLUDE_DIRS})
+# =========================================================
+# 🧩 三、编译选项
+# =========================================================
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_compile_options(-Wall -Wextra -O2)
 
-# 链接 SOEM 库
-target_link_libraries(csp_control_node ${SOEM_LIB})
-
-# 注册 ROS 依赖
-ament_target_dependencies(csp_control_node
-  rclcpp
-  std_msgs
+# =========================================================
+# 🧩 四、头文件路径
+# =========================================================
+include_directories(
+  include
+  ${SOEM_INCLUDE_DIRS}
 )
 
-# ============================================================
-# 🚀 安装规则
-# ============================================================
+# =========================================================
+# 🧱 五、生成静态库（分层封装）
+# =========================================================
+# EtherCAT 通信接口
+add_library(soem_iface STATIC src/l6n_soem_csp/soem_iface.cpp)
+ament_target_dependencies(soem_iface rclcpp std_msgs)
+
+# CiA402 状态机封装
+add_library(cia402_fsm STATIC src/l6n_soem_csp/cia402_fsm.cpp)
+ament_target_dependencies(cia402_fsm rclcpp std_msgs)
+
+# 单轴封装
+add_library(axis STATIC src/l6n_soem_csp/axis.cpp)
+ament_target_dependencies(axis rclcpp std_msgs)
+
+# 多轴管理器
+add_library(motion_manager STATIC src/l6n_soem_csp/motion_manager.cpp)
+ament_target_dependencies(motion_manager rclcpp std_msgs)
+
+# 日志封装
+add_library(logger STATIC src/l6n_soem_csp/logger.cpp)
+ament_target_dependencies(logger rclcpp std_msgs)
+
+# =========================================================
+# 🧩 六、构建节点（可执行文件）
+# =========================================================
+# 1️⃣ EtherCAT 从站扫描节点（验证用）
+add_executable(slave_scan_node src/l6n_soem_csp/slave_scan_node.cpp)
+target_link_libraries(slave_scan_node
+  soem_iface
+  ${SOEM_LIB}
+)
+ament_target_dependencies(slave_scan_node rclcpp std_msgs)
+
+# 2️⃣ 主控制节点（多轴 CSP 控制）
+add_executable(csp_node src/l6n_soem_csp/csp_node.cpp)
+target_link_libraries(csp_node
+  soem_iface
+  cia402_fsm
+  axis
+  motion_manager
+  logger
+  ${SOEM_LIB}
+)
+ament_target_dependencies(csp_node rclcpp std_msgs)
+
+# =========================================================
+# 🧩 七、安装规则
+# =========================================================
 install(
-  TARGETS csp_control_node
+  TARGETS
+    slave_scan_node
+    csp_node
+    soem_iface
+    cia402_fsm
+    axis
+    motion_manager
+    logger
   DESTINATION lib/${PROJECT_NAME}
 )
 
-# 若有 launch 或配置文件，可在此添加
-# install(DIRECTORY launch/
-#   DESTINATION share/${PROJECT_NAME}/launch
-# )
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
 
-# ============================================================
-# 🧩 导出包信息
-# ============================================================
+# =========================================================
+# ✅ 八、ament 打包导出
+# =========================================================
 ament_package()

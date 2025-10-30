@@ -1,0 +1,203 @@
+# 找到并编辑文件：
+
+```
+.vscode/c_cpp_properties.json
+```
+
+（如果没有 `.vscode` 目录，可以自己新建）
+
+添加如下配置（完整示例）：
+
+```json
+{
+    "configurations": [
+        {
+            "name": "ROS2 Jazzy + venv (HM01)",
+            // ============================================
+            // 🔍 头文件搜索路径
+            // ============================================
+            "includePath": [
+                // 项目源代码路径
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/control_ws/src/soem_ros2_driver/include/**",
+                // ROS2 Jazzy 所有头文件（含 rclcpp、std_msgs、sensor_msgs 等）
+                "/opt/ros/jazzy/include/**",
+                // 系统头文件
+                "/usr/include",
+                // Python 虚拟环境头文件（若使用 pybind11 或混合语言）
+                "${workspaceFolder}/venv/include",
+                "${workspaceFolder}/venv/lib/python3.12/site-packages",
+                // ROS2 库目录（少量依赖会引用此路径）
+                "/opt/ros/jazzy/lib/**"
+            ],
+            // ============================================
+            // ⚙️ 宏定义（可选）
+            // ============================================
+            "defines": [
+                "EIGEN_MPL2_ONLY",
+                "ROS2_BUILD"
+            ],
+            // ============================================
+            // 🧠 编译器与标准配置
+            // ============================================
+            "compilerPath": "/usr/bin/g++",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            // IntelliSense 模式
+            "intelliSenseMode": "linux-gcc-x64",
+            // 限制符号搜索范围，提高性能
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}
+```
+
+# 找到并编辑文件：
+
+```
+.vscode/settings.json
+```
+
+（如果没有 `.vscode` 目录，可以自己新建）
+
+添加如下配置（完整示例）：
+
+```json
+{
+    // ======================================================
+    // 💡 文件类型识别
+    // ======================================================
+    "files.associations": {
+        "*.hpp": "cpp",
+        "*.h": "cpp",
+        "cstdint": "cpp",
+        "cctype": "cpp",
+        "clocale": "cpp",
+        "cmath": "cpp",
+        "csignal": "cpp",
+        "cstdarg": "cpp",
+        "cstddef": "cpp",
+        "cstdio": "cpp",
+        "cstdlib": "cpp",
+        "cstring": "cpp",
+        "ctime": "cpp",
+        "cwchar": "cpp",
+        "cwctype": "cpp",
+        "array": "cpp",
+        "atomic": "cpp",
+        "strstream": "cpp",
+        "bit": "cpp",
+        "bitset": "cpp",
+        "cfenv": "cpp",
+        "charconv": "cpp",
+        "chrono": "cpp",
+        "codecvt": "cpp",
+        "compare": "cpp",
+        "complex": "cpp",
+        "concepts": "cpp",
+        "condition_variable": "cpp",
+        "deque": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "vector": "cpp",
+        "exception": "cpp",
+        "expected": "cpp",
+        "algorithm": "cpp",
+        "functional": "cpp",
+        "iterator": "cpp",
+        "memory": "cpp",
+        "memory_resource": "cpp",
+        "numeric": "cpp",
+        "optional": "cpp",
+        "random": "cpp",
+        "ratio": "cpp",
+        "regex": "cpp",
+        "source_location": "cpp",
+        "string_view": "cpp",
+        "system_error": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "fstream": "cpp",
+        "future": "cpp",
+        "initializer_list": "cpp",
+        "iomanip": "cpp",
+        "iosfwd": "cpp",
+        "iostream": "cpp",
+        "istream": "cpp",
+        "limits": "cpp",
+        "mutex": "cpp",
+        "new": "cpp",
+        "numbers": "cpp",
+        "ostream": "cpp",
+        "semaphore": "cpp",
+        "shared_mutex": "cpp",
+        "span": "cpp",
+        "sstream": "cpp",
+        "stdexcept": "cpp",
+        "stop_token": "cpp",
+        "streambuf": "cpp",
+        "thread": "cpp",
+        "cinttypes": "cpp",
+        "typeindex": "cpp",
+        "typeinfo": "cpp",
+        "variant": "cpp",
+        "format": "cpp",
+        "stdfloat": "cpp",
+        "__nullptr": "cpp"
+    },
+    // ======================================================
+    // 🧱 ROS2 + colcon 头文件索引
+    // ======================================================
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/control_ws/src/soem_ros2_driver/include/**",
+        "${workspaceFolder}/install/**/include/**",
+        "/opt/ros/jazzy/include/**",
+        "/usr/include",
+        "${workspaceFolder}/venv/include",
+        "${workspaceFolder}/venv/lib/python3.12/site-packages",
+        "/opt/ros/jazzy/lib/**"
+    ],
+    // ======================================================
+    // ⚙️ 编译器与标准配置
+    // ======================================================
+    "C_Cpp.default.compilerPath": "/usr/bin/g++",
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.default.cStandard": "c17",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    // ======================================================
+    // 🧩 ROS2 环境变量自动加载
+    // ======================================================
+    "terminal.integrated.env.linux": {
+        "ROS_DISTRO": "jazzy",
+        "AMENT_PREFIX_PATH": "/opt/ros/jazzy",
+        "LD_LIBRARY_PATH": "/opt/ros/jazzy/lib",
+        "PATH": "/opt/ros/jazzy/bin:${env:PATH}"
+    },
+    // ======================================================
+    // 🧠 IntelliSense 与代码风格
+    // ======================================================
+    "C_Cpp.errorSquiggles": "enabled",
+    "C_Cpp.autocomplete": "default",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    // ======================================================
+    // 🧩 Python 虚拟环境
+    // ======================================================
+    "python.defaultInterpreterPath": "${workspaceFolder}/venv/bin/python3",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/venv/lib/python3.12/site-packages"
+    ]
+}
+
+```
+
