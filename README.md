@@ -1,1 +1,1 @@
-Still under testing, I'd be very happy if any experts could help
+I am a newcomer and this is a self entertaining project. I am trying to use GPT to build a humanoid robot from scratch and it is still in its early stages. I look forward to everyone's help. I am currently trying to write an EtherCAT driver for ROS2.
