@@ -132,5 +132,9 @@ void SoemIface::close()
 // 模板实例化（确保编译器生成对应实现）
 template bool SoemIface::sdoRead<uint16_t>(int, EC_Index, EC_SubIdx, uint16_t &);
 template bool SoemIface::sdoWrite<uint16_t>(int, EC_Index, EC_SubIdx, const uint16_t &);
+template bool SoemIface::sdoRead<int32_t>(int, EC_Index, EC_SubIdx, int32_t &);
+template bool SoemIface::sdoWrite<int32_t>(int, EC_Index, EC_SubIdx, const int32_t &);
+template bool SoemIface::sdoWrite<int8_t>(int, EC_Index, EC_SubIdx, const int8_t &);
+
 
 } // namespace l6n

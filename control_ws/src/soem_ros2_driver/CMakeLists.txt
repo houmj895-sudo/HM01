@@ -7,6 +7,7 @@ project(soem_ros2_driver)
 find_package(ament_cmake REQUIRED)   # ROS2 构建系统
 find_package(rclcpp REQUIRED)        # ROS2 C++ API
 find_package(std_msgs REQUIRED)      # 常用消息类型
+find_package(yaml-cpp REQUIRED)      # 🔥 YAML 配置解析库（需安装 libyaml-cpp-dev）
 
 # =========================================================
 # 🧰 二、查找 SOEM 库与头文件
@@ -52,29 +53,36 @@ include_directories(
 # =========================================================
 # 🧱 五、生成静态库（分层封装）
 # =========================================================
-# EtherCAT 通信接口
+
+# 🧱 EtherCAT 通信接口封装
 add_library(soem_iface STATIC src/l6n_soem_csp/soem_iface.cpp)
 ament_target_dependencies(soem_iface rclcpp std_msgs)
 
-# CiA402 状态机封装
+# ⚙️ CiA402 状态机封装
 add_library(cia402_fsm STATIC src/l6n_soem_csp/cia402_fsm.cpp)
 ament_target_dependencies(cia402_fsm rclcpp std_msgs)
 
-# 单轴封装
+# 🧭 单轴封装
 add_library(axis STATIC src/l6n_soem_csp/axis.cpp)
 ament_target_dependencies(axis rclcpp std_msgs)
 
-# 多轴管理器
+# 🧩 多轴运动管理器
 add_library(motion_manager STATIC src/l6n_soem_csp/motion_manager.cpp)
 ament_target_dependencies(motion_manager rclcpp std_msgs)
 
-# 日志封装
+# 🧾 日志系统封装
 add_library(logger STATIC src/l6n_soem_csp/logger.cpp)
 ament_target_dependencies(logger rclcpp std_msgs)
+
+# ⚙️ YAML 配置解析模块（新）
+add_library(config_loader STATIC src/l6n_soem_csp/config_loader.cpp)
+ament_target_dependencies(config_loader rclcpp std_msgs)
+target_link_libraries(config_loader yaml-cpp)
 
 # =========================================================
 # 🧩 六、构建节点（可执行文件）
 # =========================================================
+
 # 1️⃣ EtherCAT 从站扫描节点（验证用）
 add_executable(slave_scan_node src/l6n_soem_csp/slave_scan_node.cpp)
 target_link_libraries(slave_scan_node
@@ -91,6 +99,8 @@ target_link_libraries(csp_node
   axis
   motion_manager
   logger
+  config_loader      # ✅ 加入配置加载器
+  yaml-cpp           # ✅ 链接 YAML 库
   ${SOEM_LIB}
 )
 ament_target_dependencies(csp_node rclcpp std_msgs)
@@ -107,6 +117,7 @@ install(
     axis
     motion_manager
     logger
+    config_loader
   DESTINATION lib/${PROJECT_NAME}
 )
 

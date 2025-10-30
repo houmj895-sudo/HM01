@@ -84,7 +84,8 @@
         "variant": "cpp",
         "format": "cpp",
         "stdfloat": "cpp",
-        "__nullptr": "cpp"
+        "__nullptr": "cpp",
+        "__node_handle": "cpp"
     },
     // ======================================================
     // 🧱 ROS2 + colcon 头文件索引

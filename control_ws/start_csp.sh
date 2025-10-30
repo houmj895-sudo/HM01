@@ -1,20 +1,25 @@
 #!/bin/bash
 # ======================================================
-# EtherCAT CSP 控制节点启动脚本（SOEM ROS2 驱动）
-# 适配：Ubuntu 24.04 + ROS2 Jazzy
+# 🧠 EtherCAT CSP 控制节点启动脚本（SOEM ROS2 驱动）
+# 适配：Ubuntu 24.04 + ROS2 Jazzy + 雷赛 L6N 驱动
 # ======================================================
 
 set -e
 
 # ----------------------------------------
-# 🧩 1. 基础参数配置
+# 🧩 1️⃣ 基础参数配置
 # ----------------------------------------
-IFACE="enp4s0"    # ⚠️ 根据实际网卡名修改
+IFACE="enp4s0"  # ⚠️ 根据你的实际网卡名修改
 PROJECT_DIR="$HOME/桌面/HM01/control_ws"
 NODE_PATH="$PROJECT_DIR/install/soem_ros2_driver/lib/soem_ros2_driver/csp_node"
 
+# 配置文件路径（ROS 参数）
+ETHER_CFG="$PROJECT_DIR/config/ethercat_config.yaml"
+MOTION_CFG="$PROJECT_DIR/config/motion_config.yaml"
+LOG_CFG="$PROJECT_DIR/config/log_config.yaml"
+
 # ----------------------------------------
-# 🧹 2. Ctrl+C 清理函数
+# 🧹 2️⃣ Ctrl+C 清理函数（恢复网络）
 # ----------------------------------------
 cleanup() {
   echo ""
@@ -30,7 +35,7 @@ cleanup() {
 trap cleanup SIGINT
 
 # ----------------------------------------
-# ⚙️ 3. 配置网卡参数
+# ⚙️ 3️⃣ 配置网卡参数（优化 EtherCAT 性能）
 # ----------------------------------------
 echo "---------------------------------------"
 echo "🔧 Step 1: 配置并优化网卡: $IFACE"
@@ -64,11 +69,15 @@ echo "✅ $IFACE 已准备好用于 EtherCAT 通信。"
 sudo ethtool $IFACE | grep -E "Speed|Duplex|Auto-negotiation|Link detected"
 
 # ----------------------------------------
-# 🚀 4. 启动 ROS2 控制节点
+# 🚀 4️⃣ 启动 ROS2 CSP 控制节点
 # ----------------------------------------
 echo "---------------------------------------"
 read -p "按 Enter 启动 EtherCAT CSP 控制节点..."
 
 echo "🚀 启动 csp_node ..."
 sudo -E LD_LIBRARY_PATH=/opt/ros/jazzy/lib:$LD_LIBRARY_PATH \
-  $NODE_PATH
+  $NODE_PATH \
+  --ros-args \
+  -p ethercat_config:="$ETHER_CFG" \
+  -p motion_config:="$MOTION_CFG" \
+  -p log_config:="$LOG_CFG"
