@@ -1,0 +1,10 @@
+# ======================================================
+# 日志输出与级别控制
+# ======================================================
+logger:
+  use_ros_log: true       # true 使用 ROS2 日志；false 使用控制台输出
+  level: "info"           # 支持：debug, info, warn, error
+  log_to_file: true       # 是否写入文件（需节点实现文件日志）
+  log_dir: "~/桌面/HM01/logs"  # 日志保存路径
+  max_file_size_mb: 5     # 单个日志文件最大大小（MB）
+  max_backup_files: 10    # 最大备份日志文件数量

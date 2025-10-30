@@ -1,0 +1,65 @@
+# ======================================================
+# ⚙️ 运动控制配置文件（单轴：雷赛 L6N + ACM1H-0604-B 电机）
+# 模式：CSP（Cyclic Synchronous Position）
+# ======================================================
+
+motion:
+
+  # ======================================================
+  # 🧩 轴1配置 —— 电机：ACM1H-0604-B（配 L6N 伺服驱动）
+  # ======================================================
+  axis_1:
+    control_mode: "CSP"            # EtherCAT 同步位置模式
+    feedback_source: "encoder"     # 使用电机内部绝对值编码器反馈
+    position_offset: 0             # 零位偏移补偿（脉冲）
+    soft_limit_pos: 7000000        # 软件上限（防止越位）
+    soft_limit_neg: -7000000       # 软件下限
+    torque_limit: 1000             # 扭矩限制（伺服内部单位）
+    enable_on_start: true          # 节点启动后是否自动上电
+
+    # ----------------------------------------
+    # ⚙️ 电机物理与性能参数（源自雷赛官方规格表）
+    # ----------------------------------------
+    motor:
+      frame_size_mm: 60            # 电机机座号
+      type: "高惯量"               # 转子惯量类型
+      rated_power_kw: 0.4          # 额定功率
+      rated_voltage_v: 220         # 额定电压
+      rated_speed_rpm: 3000        # 额定转速
+      max_speed_rpm: 6000          # 最高转速
+      rated_torque_nm: 1.27        # 额定转矩
+      max_torque_nm: 4.46          # 最大转矩
+      rated_current_a: 2.1         # 额定电流 (Arms)
+      max_current_a: 7.6           # 最大电流 (Arms)
+      torque_constant_nm_per_a: 0.645  # 转矩系数 Nm/A (rms)
+      rotor_inertia_kgm2e4: 0.58   # 转子转动惯量 (kgm²×10⁻⁴)
+      encoder_resolution: 8388608  # 编码器分辨率（23位绝对值编码器）
+
+    # ----------------------------------------
+    # 🧭 回零（Homing）参数（绝对值编码器推荐逻辑归零）
+    # ----------------------------------------
+    homing:
+      enabled: true               # 启用逻辑归零
+      method: 35                  # 当前机械位置作为零点（不运动）
+      speed_search: 0.0           # 不运动
+      speed_latch: 0.0            # 不运动
+      offset_pulse: 0             # 零点偏移（脉冲）
+      timeout_s: 5                # 超时保护
+
+    # ----------------------------------------
+    # 🕹️ 轨迹生成配置（测试阶段）
+    # ----------------------------------------
+    trajectory:
+      enabled: true               # ✅ 测试模式开关（正式使用时可设为 false）
+      type: "sine"                # 正弦波轨迹：验证通信和伺服响应
+      amplitude_deg: 30           # 振幅 ±30°（机械角度）
+      frequency_hz: 0.25          # 频率 0.25Hz（4秒往返一次）
+      duration_s: 10              # 持续时间（秒）
+
+    # ----------------------------------------
+    # 🧠 控制循环参数（与 EtherCAT 同步）
+    # ----------------------------------------
+    control_loop:
+      rate_hz: 1000               # 控制周期（Hz）
+      interpolation: true         # 是否启用目标插值
+      position_tolerance: 100     # 位置误差容忍范围（脉冲）
