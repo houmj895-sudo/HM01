@@ -37,5 +37,4 @@ git commit -m "Week1: initialize project structure"
 
 执行完告诉我输出，我帮你确认是否提交成功。
 
-git log产看所有提交
-git reset --hard 哈希值可以强制回退到指定版本
+

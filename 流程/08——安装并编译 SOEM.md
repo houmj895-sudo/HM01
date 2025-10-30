@@ -52,6 +52,8 @@ cd 到SOEM，然后rm -rf .git
 
 cd ~/桌面/HM01/control_ws/src/SOEM/build
 
+sudo cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local
+
 sudo make install
 
 检查：

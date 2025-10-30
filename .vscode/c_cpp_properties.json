@@ -8,7 +8,7 @@
             "includePath": [
                 // 项目源代码路径
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/src/soem_ros2_driver/include/**",
+                "${workspaceFolder}/control_ws/src/soem_ros2_driver/include/**",
                 // ROS2 Jazzy 所有头文件（含 rclcpp、std_msgs、sensor_msgs 等）
                 "/opt/ros/jazzy/include/**",
                 // 系统头文件
